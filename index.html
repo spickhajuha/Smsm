@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Number OTP Verification</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="signup-box">
+            <h1>Phone Number Sign-Up</h1>
+            <form id="signup-form">
+                <div class="textbox">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" placeholder="Enter your phone number" required>
+                </div>
+                <button type="button" id="send-otp" class="btn">Send OTP</button>
+
+                <div class="textbox" id="otp-container" style="display: none;">
+                    <label for="otp">Enter OTP</label>
+                    <input type="text" id="otp" placeholder="Enter OTP" required>
+                </div>
+                <button type="submit" id="verify-otp" class="btn" style="display: none;">Verify OTP</button>
+            </form>
+            <p id="message"></p>
+        </div>
+    </div>
+</body>
+</html>
