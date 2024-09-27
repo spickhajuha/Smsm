@@ -1,31 +1,73 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>फोन नंबर OTP सत्यापन</title>
-    <link rel="stylesheet" href="styles.css">
-    <script type="module" src="script.js"></script>
+    <title>Phone Signup</title>
 </head>
 <body>
-    <div class="container">
-        <div class="signup-box">
-            <h1>फोन नंबर साइन-अप</h1>
-            <form id="signup-form">
-                <div class="textbox">
-                    <label for="phone">फोन नंबर</label>
-                    <input type="tel" id="phone" placeholder="अपना फोन नंबर डालें" required>
-                </div>
-                <button type="button" id="send-otp" class="btn">OTP भेजें</button>
+    <h2>Phone Signup</h2>
+    <form id="signupForm">
+        <label for="phoneNumber">Phone Number:</label>
+        <input type="text" id="phoneNumber" name="phoneNumber" required><br><br>
+        
+        <button type="button" onclick="sendOTP()">Send OTP</button>
+    </form>
 
-                <div class="textbox" id="otp-container" style="display: none;">
-                    <label for="otp">OTP डालें</label>
-                    <input type="text" id="otp" placeholder="OTP डालें" required>
-                </div>
-                <button type="submit" id="verify-otp" class="btn" style="display: none;">OTP सत्यापित करें</button>
-            </form>
-            <p id="message"></p>
-        </div>
+    <div id="otpSection" style="display:none;">
+        <h2>Enter OTP</h2>
+        <form id="otpForm">
+            <label for="otp">OTP:</label>
+            <input type="text" id="otp" name="otp" required><br><br>
+            
+            <button type="button" onclick="verifyOTP()">Verify OTP</button>
+        </form>
     </div>
+
+    <script>
+        function sendOTP() {
+            var phoneNumber = document.getElementById("phoneNumber").value;
+            
+            // Send phone number to server-side to trigger Twilio
+            fetch('/sendOTP', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ phoneNumber: phoneNumber })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    alert('OTP sent!');
+                    document.getElementById("otpSection").style.display = 'block';
+                } else {
+                    alert('Error sending OTP');
+                }
+            });
+        }
+
+        function verifyOTP() {
+            var otp = document.getElementById("otp").value;
+
+            // Send OTP to server for verification
+            fetch('/verifyOTP', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ otp: otp })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    alert('OTP verified!');
+                    window.location.href = '1.html';
+                } else {
+                    alert('Invalid OTP');
+                }
+            });
+        }
+    </script>
 </body>
 </html>
