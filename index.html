@@ -1,30 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phone Number OTP Verification</title>
+    <title>फोन नंबर OTP सत्यापन</title>
     <link rel="stylesheet" href="styles.css">
     <script type="module" src="script.js"></script>
 </head>
 <body>
     <div class="container">
         <div class="signup-box">
-            <h1>Phone Number Sign-Up</h1>
+            <h1>फोन नंबर साइन-अप</h1>
             <form id="signup-form">
                 <div class="textbox">
-                    <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" placeholder="Enter your phone number" required>
+                    <label for="phone">फोन नंबर</label>
+                    <input type="tel" id="phone" placeholder="अपना फोन नंबर डालें" required>
                 </div>
-                <button type="button" id="send-otp" class="btn">Send OTP</button>
-
-                <div id="recaptcha-container"></div> <!-- Add this div for reCAPTCHA -->
+                <button type="button" id="send-otp" class="btn">OTP भेजें</button>
 
                 <div class="textbox" id="otp-container" style="display: none;">
-                    <label for="otp">Enter OTP</label>
-                    <input type="text" id="otp" placeholder="Enter OTP" required>
+                    <label for="otp">OTP डालें</label>
+                    <input type="text" id="otp" placeholder="OTP डालें" required>
                 </div>
-                <button type="submit" id="verify-otp" class="btn" style="display: none;">Verify OTP</button>
+                <button type="submit" id="verify-otp" class="btn" style="display: none;">OTP सत्यापित करें</button>
             </form>
             <p id="message"></p>
         </div>
