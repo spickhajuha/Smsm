@@ -1,73 +1,23 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phone Signup</title>
+  <title>Twilio OTP Example</title>
+  <script src="(link unavailable)"></script>
 </head>
 <body>
-    <h2>Phone Signup</h2>
-    <form id="signupForm">
-        <label for="phoneNumber">Phone Number:</label>
-        <input type="text" id="phoneNumber" name="phoneNumber" required><br><br>
-        
-        <button type="button" onclick="sendOTP()">Send OTP</button>
-    </form>
+  <h1>Twilio OTP Example</h1>
+  <form id="otp-form">
+    <label>Phone Number:</label>
+    <input type="text" id="phone-number" />
+    <button id="send-otp-button">Send OTP</button>
+    <br />
+    <label>OTP:</label>
+    <input type="text" id="otp-input" />
+    <button id="verify-otp-button">Verify OTP</button>
+  </form>
+  <div id="status-message"></div>
 
-    <div id="otpSection" style="display:none;">
-        <h2>Enter OTP</h2>
-        <form id="otpForm">
-            <label for="otp">OTP:</label>
-            <input type="text" id="otp" name="otp" required><br><br>
-            
-            <button type="button" onclick="verifyOTP()">Verify OTP</button>
-        </form>
-    </div>
-
-    <script>
-        function sendOTP() {
-            var phoneNumber = document.getElementById("phoneNumber").value;
-            
-            // Send phone number to server-side to trigger Twilio
-            fetch('/sendOTP', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ phoneNumber: phoneNumber })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(data.success) {
-                    alert('OTP sent!');
-                    document.getElementById("otpSection").style.display = 'block';
-                } else {
-                    alert('Error sending OTP');
-                }
-            });
-        }
-
-        function verifyOTP() {
-            var otp = document.getElementById("otp").value;
-
-            // Send OTP to server for verification
-            fetch('/verifyOTP', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ otp: otp })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(data.success) {
-                    alert('OTP verified!');
-                    window.location.href = '1.html';
-                } else {
-                    alert('Invalid OTP');
-                }
-            });
-        }
-    </script>
+  <script src="script.js"></script>
 </body>
 </html>

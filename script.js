@@ -1,63 +1,44 @@
-// आवश्यक Firebase SDK फ़ंक्शन आयात करें
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
-// आपकी वेब ऐप की Firebase कॉन्फ़िगरेशन
-const firebaseConfig = {
-  apiKey: "AIzaSyDTJFCi2q0eiXwJFNzpb-tqKQtP1Y7YHT8",
-  authDomain: "spic-9f315.firebaseapp.com",
-  projectId: "spic-9f315",
-  storageBucket: "spic-9f315.appspot.com",
-  messagingSenderId: "49035200043",
-  appId: "1:49035200043:web:74b91c2eba95db19754c6e",
-  measurementId: "G-MX0WMMQCKJ"
-};
+const accountSid = 'AC376cce06e170bde18260784d233efdd9=';
+const authToken = '6f46ae0d47a24ce19f7876dfc690bac0';
+const serviceSid = 'MGfe805c5f5ae419198151117bc433e2dd';
 
-// Firebase इनिशियलाइज़ करें
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const auth = getAuth(app);
+const twilio = new Twilio(accountSid, authToken);
+const verify = twilio.verify.v2;
 
-// OTP भेजने का कार्य
-document.getElementById("send-otp").addEventListener("click", function () {
-    const phoneNumber = document.getElementById("phone").value;
-    
-    // रीकैप्चा वेरिफायर बनाएँ
-    const appVerifier = new RecaptchaVerifier('send-otp', {
-        'size': 'invisible',
-        'callback': (response) => {
-            // कैप्चा पास किया गया
-        },
-        'expired-callback': () => {
-            // कैप्चा expired हो गया
-        }
-    }, auth);
+const phoneNumberInput = document.getElementById('phone-number');
+const sendOtpButton = document.getElementById('send-otp-button');
+const otpInput = document.getElementById('otp-input');
+const verifyOtpButton = document.getElementById('verify-otp-button');
+const statusMessage = document.getElementById('status-message');
 
-    // फोन नंबर पर OTP भेजें
-    signInWithPhoneNumber(auth, phoneNumber, appVerifier)
-        .then((confirmationResult) => {
-            window.confirmationResult = confirmationResult; // confirmationResult को एक ग्लोबल वेरिएबल के रूप में स्टोर करें
-            document.getElementById("otp-container").style.display = "block";
-            document.getElementById("verify-otp").style.display = "block";
-            document.getElementById("message").innerText = "OTP भेजा गया है!";
-        }).catch((error) => {
-            document.getElementById("message").innerText = "OTP भेजने में त्रुटि: " + error.message;
-        });
+sendOtpButton.addEventListener('click', async () => {
+  const phoneNumber = phoneNumberInput.value;
+  try {
+    const verification = await verify.services(serviceSid).verifications.create({
+      to: phoneNumber,
+      channel: 'sms'
+    });
+    statusMessage.textContent = 'OTP sent!';
+  } catch (error) {
+    statusMessage.textContent = 'Error sending OTP: ' + error.message;
+  }
 });
 
-// OTP सत्यापन का कार्य
-document.getElementById("signup-form").addEventListener("submit", function (event) {
-    event.preventDefault(); // फॉर्म सबमिशन को रोकें
-
-    const otp = document.getElementById("otp").value;
-
-    // OTP को सत्यापित करें
-    window.confirmationResult.confirm(otp).then((result) => {
-        // OTP सफलतापूर्वक सत्यापित
-        const user = result.user;
-        document.getElementById("message").innerText = "OTP सत्यापित हुआ! आप साइन-अप हो गए हैं।";
-    }).catch((error) => {
-        document.getElementById("message").innerText = "OTP सत्यापन में त्रुटि: " + error.message;
+verifyOtpButton.addEventListener('click', async () => {
+  const phoneNumber = phoneNumberInput.value;
+  const otpCode = otpInput.value;
+  try {
+    const verificationCheck = await verify.services(serviceSid).verificationChecks.create({
+      to: phoneNumber,
+      code: otpCode
     });
+    if (verificationCheck.valid) {
+      statusMessage.textContent = 'OTP verified!';
+    } else {
+      statusMessage.textContent = 'Invalid OTP';
+    }
+  } catch (error) {
+    statusMessage.textContent = 'Error verifying OTP: ' + error.message;
+  }
 });
